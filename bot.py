@@ -1,6 +1,8 @@
 import discord
+import json # Temporarily using JSON to store token, will change soon.
 
-TOKEN = ''
+with open('config.json') as f:
+    data = json.load(f)
 
 client = discord.Client()
 
@@ -8,4 +10,4 @@ client = discord.Client()
 async def on_ready():
     print('{} is ready'.format(client.user.name))
 
-client.run('')
+client.run(data["token"])
