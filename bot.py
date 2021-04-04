@@ -1,9 +1,10 @@
+# Module Imports
 import discord
 from discord.ext import commands
-import json # Temporarily using JSON to store token, will change soon.
+from dotenv import load_dotenv
+import os
 
-with open('config.json') as f:
-    data = json.load(f)
+load_dotenv()
 
 PREFIX = '%'
 
@@ -50,11 +51,11 @@ async def shutdown(ctx):
     await bot.logout()
 
 # Cogs Setup
-initial_extensions = []
+initial_extensions = ['Commands.gsetup']
 
 if __name__ == '__main__':
     for extension in initial_extensions:
         bot.load_extension(extension)
         print('Loaded {}'.format(extension))
 
-bot.run(data["token"])
+bot.run(os.getenv("DISCORD_TOKEN"))
