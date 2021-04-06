@@ -46,6 +46,7 @@ async def _reload(ctx, *, module : str):
         await ctx.send('`{}` Module reloaded.'.format(module))
 
 @bot.command()
+@commands.is_owner()
 async def shutdown(ctx):
     await ctx.send('Shutting down')
     await bot.logout()
