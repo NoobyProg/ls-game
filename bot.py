@@ -4,19 +4,22 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import os
 
+# Loads .env file
 load_dotenv()
 
 PREFIX = '%'
 
 bot = commands.AutoShardedBot(command_prefix = PREFIX)
 
+# Changes bot presense and activity on login/ready
 @bot.event
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("L's Game"))
     print('{} is ready'.format(bot.user.name))
 
+# Used to load a Cog (Module)
 @bot.command()
-@commands.is_owner()
+@commands.is_owner() # Makes the Command Bot Owner-only
 async def load(ctx, *, module : str):
     try:
         bot.load_extension(module)
@@ -25,6 +28,7 @@ async def load(ctx, *, module : str):
     else:
         await ctx.send('`{}` Module Loaded.'.format(module))
     
+# Used to unload a Cog
 @bot.command()
 @commands.is_owner()
 async def unload(ctx, *, module : str):
@@ -35,6 +39,7 @@ async def unload(ctx, *, module : str):
     else:
         await ctx.send('`{}` Module unloaded.'.format(module))
 
+# Reloads a Cog (Imitates a Cog Unload and Load)
 @bot.command(name='reload')
 @commands.is_owner()
 async def _reload(ctx, *, module : str):
@@ -45,6 +50,7 @@ async def _reload(ctx, *, module : str):
     else:
         await ctx.send('`{}` Module reloaded.'.format(module))
 
+# Used to completely shut down all shards of the bot
 @bot.command()
 @commands.is_owner()
 async def shutdown(ctx):

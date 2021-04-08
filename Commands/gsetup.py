@@ -1,18 +1,21 @@
+# Module Imports
 import discord
 import sqlite3
 from discord.ext import commands
 import string
 import random
 
+# Creates a connection to the SQLite Database where the records are stored
 con = sqlite3.connect('Database/games.db')
 cur = con.cursor()
 
-game_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
+game_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6)) # Used to generate a 6 digit random ID (String) with lowercase letters and numbers. For Example :- 6vt9y4
 
 class SetupCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # Async function to check if the author is already entered in a record
     async def check_inGame(self, ctx):
         check = cur.execute('SELECT * FROM players WHERE playerId = "{}"'.format(ctx.author.id))
         if check.fetchone():
@@ -20,11 +23,13 @@ class SetupCog(commands.Cog):
         else:
             return False
 
+    # Used to create a New L's Game
     @commands.command()
     async def create(self, ctx):
         if await self.check_inGame(ctx) == True:
             await ctx.send('You have already joined another game')
         else:
+            # Adds the Author's data into the database
             cur.execute('INSERT INTO players (playerId, gameId) VALUES ("{}", "{}")'.format(ctx.author.id, game_id))
             cur.execute('INSERT INTO games (masterId, gameId, guildId, "state") VALUES ("{}", "{}", "{}", "pre-game")'.format(ctx.author.id, game_id, ctx.guild.id))
 
@@ -32,6 +37,7 @@ class SetupCog(commands.Cog):
 
             con.commit()
     
+    # Used to join an existing game
     @commands.command()
     async def join(self, ctx):
         if await self.check_inGame(ctx) == True:
