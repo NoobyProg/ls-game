@@ -79,22 +79,25 @@ class SetupCog(commands.Cog):
             con.commit()
 
 # W.I.P (Incomplete)
-"""
+
     @commands.command()
     async def start(self, ctx):
-        gamemaster_id = cur.execute("SELECT masterId FROM games WHERE guildId = '{}'"
-        .format(ctx.guild.id)).fetchone()
-
-        gamemaster_user = self.bot.get_user(gamemaster_id)
-
         if self.check_inGame(ctx) == False:
             await ctx.send('You are not in a L\'s Game')
-        elif not gamemaster_id == ctx.author.id:
-            await ctx.send('Only the Gamemaster : {} can start the game'
-            .format(gamemaster_user.name))
         else:
-            cur.execute("UPDATE games SET state = 'gameplay' WHERE guildId = '{}'"
-            .format(ctx.guild.id))
-"""
+        
+            gamemaster_id = cur.execute("SELECT masterId FROM games WHERE guildId = '{}'"
+            .format(ctx.guild.id)).fetchone()[0]
+
+            gamemaster_user = self.bot.get_user(gamemaster_id)
+        
+        
+            if gamemaster_id != ctx.author.id:
+                await ctx.send('Only the Gamemaster : {} can start the game'
+                .format(gamemaster_user))
+            else: 
+                cur.execute("UPDATE games SET state = 'gameplay' WHERE guildId = '{}'"
+                .format(ctx.guild.id))
+        
 def setup(bot):
     bot.add_cog(SetupCog(bot))

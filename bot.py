@@ -9,7 +9,11 @@ load_dotenv()
 
 PREFIX = '%'
 
-bot = commands.AutoShardedBot(command_prefix = PREFIX)
+# Setup Intents
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.AutoShardedBot(command_prefix = PREFIX, intents = intents)
 
 # Changes bot presense and activity on login/ready
 @bot.event
@@ -58,7 +62,7 @@ async def shutdown(ctx):
     await bot.logout()
 
 # Cogs Setup
-initial_extensions = ['Commands.gsetup']
+initial_extensions = ['Commands.gsetup', 'Commands.eval']
 
 if __name__ == '__main__':
     for extension in initial_extensions:
