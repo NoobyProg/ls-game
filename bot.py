@@ -4,7 +4,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import os
 
-# Loads .env file
+# Loads the .env file
 load_dotenv()
 
 PREFIX = '%'
@@ -28,9 +28,9 @@ async def load(ctx, *, module : str):
     try:
         bot.load_extension(module)
     except Exception as e:
-        await ctx.send('`{}:` {}'.format(type(e).__name__, e))
+        await ctx.reply('`{}:` {}'.format(type(e).__name__, e))
     else:
-        await ctx.send('`{}` Module Loaded.'.format(module))
+        await ctx.reply('`{}` Module Loaded.'.format(module))
     
 # Used to unload a Cog
 @bot.command()
@@ -39,9 +39,9 @@ async def unload(ctx, *, module : str):
     try:
         bot.unload_extension(module)
     except Exception as e:
-        await ctx.send('`{}:` {}'.format(type(e).__name__, e))
+        await ctx.reply('`{}:` {}'.format(type(e).__name__, e))
     else:
-        await ctx.send('`{}` Module unloaded.'.format(module))
+        await ctx.reply('`{}` Module unloaded.'.format(module))
 
 # Reloads a Cog (Imitates a Cog Unload and Load)
 @bot.command(name='reload')
@@ -50,16 +50,21 @@ async def _reload(ctx, *, module : str):
     try:
         bot.reload_extension(module)
     except Exception as e:
-        await ctx.send('`{}:` {}'.format(type(e).__name__, e))
+        await ctx.reply('`{}:` {}'.format(type(e).__name__, e))
     else:
-        await ctx.send('`{}` Module reloaded.'.format(module))
+        await ctx.reply('`{}` Module reloaded.'.format(module))
 
 # Used to completely shut down all shards of the bot
 @bot.command()
 @commands.is_owner()
 async def shutdown(ctx):
-    await ctx.send('Shutting down')
+    await ctx.reply('Shutting down')
     await bot.logout()
+
+# Used to tell the bot's Latency
+@bot.command()
+async def ping(ctx):
+    await ctx.reply(f':ping_pong: Pong! This Took `{round(bot.latency * 1000)}ms`')
 
 # Cogs Setup
 initial_extensions = ['Commands.gsetup', 'Commands.eval']
