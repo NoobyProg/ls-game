@@ -30,34 +30,34 @@ class SetupCog(commands.Cog):
         check_guildGame = cur.execute("SELECT guildId FROM games WHERE guildId = '{}'"
         .format(ctx.guild.id)).fetchone()
 
-        if self.check_inGame(ctx) == True:
-            await ctx.send('You have already joined another game')
+        if self.check_inGame(ctx) is True:
+            await ctx.reply('You have already joined another game')
         elif check_guildGame:
-            await ctx.send('An L\'s game is already ongoing in this server')
+            await ctx.reply('A L\'s game is already ongoing in this server')
         else:
             # Adds the Author's data into the database
-            cur.execute('INSERT INTO players (playerId, gameId) VALUES ("{}", "{}")'
+            cur.execute('INSERT INTO players(playerId, gameId) VALUES("{}", "{}")'
             .format(ctx.author.id, game_id))
-            cur.execute('INSERT INTO games (masterId, gameId, guildId, "state", channelId) VALUES ("{}", "{}", "{}", "pre-game", "{}")'
+            cur.execute('INSERT INTO games(masterId, gameId, guildId, "state", channelId) VALUES("{}", "{}", "{}", "pre-game", "{}")'
             .format(ctx.author.id, game_id, ctx.guild.id, g_channel.id))
 
-            await ctx.send('An L\'s Game has been created with Game ID : **{}**'
+            await ctx.reply('A L\'s Game has been created with Game ID : **{}**'
             .format(game_id))
 
             con.commit()
     
-    # Used to join an existing game
+    # Used to join an existing L's game
     @commands.command()
     async def join(self, ctx):
-        if self.check_inGame(ctx) == True:
-            await ctx.send('You have already joined another game')
+        if self.check_inGame(ctx) is True:
+            await ctx.reply('You have already joined another game')
         else:
             g_id = cur.execute("SELECT gameId FROM games WHERE guildId = '{}'"
             .format(ctx.guild.id)).fetchone()[0]
             cur.execute('INSERT INTO players (playerId, gameId) VALUES ("{}", "{}")'
             .format(ctx.author.id, g_id))
 
-            await ctx.send('Sucessfully joined L\'s Game with Game ID : **{}**'
+            await ctx.reply('Sucessfully joined L\'s Game with Game ID : **{}**'
             .format(g_id))
 
             con.commit()
@@ -65,37 +65,37 @@ class SetupCog(commands.Cog):
     # Used to leave a joined L's Game
     @commands.command()
     async def leave(self, ctx):
-        if self.check_inGame(ctx) == False:
-            await ctx.send('You have not participated in an L\'s Game')
+        if self.check_inGame(ctx) is False:
+            await ctx.reply('You have not participated in a L\'s Game')
         else:
             g_id = cur.execute("SELECT gameId FROM games WHERE guildId = '{}'"
             .format(ctx.guild.id)).fetchone()[0]
             cur.execute("DELETE FROM players WHERE playerId = '{}' AND gameId = '{}'"
             .format(ctx.author.id, g_id))
 
-            await ctx.send('Sucessfully left L\'s Game with Game ID : **{}**'
+            await ctx.reply('Sucessfully left L\'s Game with Game ID : **{}**'
             .format(g_id))
 
             con.commit()
 
 # W.I.P (Incomplete)
 
+    # Used to start a L's Game
     @commands.command()
     async def start(self, ctx):
-        if self.check_inGame(ctx) == False:
+        if self.check_inGame(ctx) is False:
             await ctx.send('You are not in a L\'s Game')
         else:
-        
+
             gamemaster_id = cur.execute("SELECT masterId FROM games WHERE guildId = '{}'"
             .format(ctx.guild.id)).fetchone()[0]
 
-            gamemaster_user = self.bot.get_user(gamemaster_id)
-        
-        
+            gamemaster_user = self.bot.get_user(gamemaster_id)        
+
             if gamemaster_id != ctx.author.id:
-                await ctx.send('Only the Gamemaster : {} can start the game'
-                .format(gamemaster_user))
-            else: 
+                await ctx.send('Only the Gamemaster: {} can start the game'
+                .format(gamemaster_user.name))
+            else:
                 cur.execute("UPDATE games SET state = 'gameplay' WHERE guildId = '{}'"
                 .format(ctx.guild.id))
         

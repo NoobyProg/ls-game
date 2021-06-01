@@ -54,7 +54,7 @@ class Eval(commands.Cog):
             try:
                 exec(to_compile, env)
             except Exception as e:
-                err = await ctx.send(f'```py\n{e.__class__.__name__}: {e}\n```')
+                err = await ctx.reply(f'```py\n{e.__class__.__name__}: {e}\n```')
                 return await ctx.message.add_reaction('\u2049')
 
             func = env['func']
@@ -63,31 +63,31 @@ class Eval(commands.Cog):
                     ret = await func()
             except Exception as e:
                 value = stdout.getvalue()
-                err = await ctx.send(f'```py\n{value}{traceback.format_exc()}\n```')
+                err = await ctx.reply(f'```py\n{value}{traceback.format_exc()}\n```')
             else:
                 value = stdout.getvalue()
                 if ret is None:
                     if value:
                         try:
-                            out = await ctx.send(f'```py\n{value}\n```')
+                            out = await ctx.reply(f'```py\n{value}\n```')
                         except:
                             paginated_text = paginate(value)
                             for page in paginated_text:
                                 if page == paginated_text[-1]:
-                                    out = await ctx.send(f'```py\n{page}\n```')
+                                    out = await ctx.reply(f'```py\n{page}\n```')
                                     break
-                                await ctx.send(f'```py\n{page}\n```')
+                                await ctx.reply(f'```py\n{page}\n```')
                 else:
                     self.client._last_result = ret
                     try:
-                        out = await ctx.send(f'```py\n{value}{ret}\n```')
+                        out = await ctx.reply(f'```py\n{value}{ret}\n```')
                     except:
                         paginated_text = paginate(f"{value}{ret}")
                         for page in paginated_text:
                             if page == paginated_text[-1]:
-                                out = await ctx.send(f'```py\n{page}\n```')
+                                out = await ctx.reply(f'```py\n{page}\n```')
                                 break
-                            await ctx.send(f'```py\n{page}\n```')
+                            await ctx.reply(f'```py\n{page}\n```')
 
             if out:
                 await ctx.message.add_reaction('\u2705')  # tick
