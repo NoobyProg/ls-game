@@ -35,11 +35,11 @@ class SetupCog(commands.Cog):
         elif check_guildGame:
             await ctx.reply('A L\'s game is already ongoing in this server')
         else:
-            # Adds the Author's data into the database
+            # Adds the Command User's data into the database
             cur.execute('INSERT INTO players(playerId, gameId) VALUES("{}", "{}")'
             .format(ctx.author.id, game_id))
-            cur.execute('INSERT INTO games(masterId, gameId, guildId, "state", channelId) VALUES("{}", "{}", "{}", "pre-game", "{}")'
-            .format(ctx.author.id, game_id, ctx.guild.id, g_channel.id))
+            cur.execute('INSERT INTO games(masterId, gameId, guildId, "state", channelId, turnNo) VALUES("{}", "{}", "{}", "pre-game", "{}")'
+            .format(ctx.author.id, game_id, ctx.guild.id, g_channel.id, 0))
 
             await ctx.reply('A L\'s Game has been created with Game ID : **{}**'
             .format(game_id))
@@ -76,7 +76,17 @@ class SetupCog(commands.Cog):
             await ctx.reply('Sucessfully left L\'s Game with Game ID : **{}**'
             .format(g_id))
 
+            # W.I.P to check if game has no players and Delete the Game
+            """
+            play_g_id = cur.execute("SELECT gameId FROM games WHERE EXISTS (SELECT gameId FROM players WHERE players.gameId = games.gameId)")
+            if play_g_id == None:
+                cur.execute("DELETE FROM games WHERE gameId = '{}'"
+                .format(g_id))
+                await ctx.send("No Players found in game : {}\nDeleting the game".format(g_id))
+
+
             con.commit()
+            """
         
 def setup(bot):
     bot.add_cog(SetupCog(bot))

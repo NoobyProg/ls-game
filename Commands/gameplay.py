@@ -48,7 +48,7 @@ class GameCog(commands.Cog):
                 .format(ctx.guild.id))
 
                 # Role Distribution
-                play_data = cur.execute("SELECT * FROM players WHERE gameId = '{}'".format(g_id)).fetchall()
+                play_data = cur.execute("SELECT playerId FROM players WHERE gameId = '{}'".format(g_id)).fetchall()
                 players = []
                 for i in range(len(play_data)):
                     players.append(play_data[i][0])
