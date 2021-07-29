@@ -67,7 +67,7 @@ async def ping(ctx):
     await ctx.reply(f':ping_pong: Pong! This Took `{round(bot.latency * 1000)}ms`')
 
 # Cogs Setup
-initial_extensions = ['Commands.gsetup', 'Commands.eval']
+initial_extensions = ['Commands.gsetup', 'Commands.eval', 'Commands.gameplay']
 
 if __name__ == '__main__':
     for extension in initial_extensions:

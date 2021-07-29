@@ -77,27 +77,6 @@ class SetupCog(commands.Cog):
             .format(g_id))
 
             con.commit()
-
-# W.I.P (Incomplete)
-
-    # Used to start a L's Game
-    @commands.command()
-    async def start(self, ctx):
-        if self.check_inGame(ctx) is False:
-            await ctx.send('You are not in a L\'s Game')
-        else:
-
-            gamemaster_id = cur.execute("SELECT masterId FROM games WHERE guildId = '{}'"
-            .format(ctx.guild.id)).fetchone()[0]
-
-            gamemaster_user = self.bot.get_user(gamemaster_id)        
-
-            if gamemaster_id != ctx.author.id:
-                await ctx.send('Only the Gamemaster: {} can start the game'
-                .format(gamemaster_user.name))
-            else:
-                cur.execute("UPDATE games SET state = 'gameplay' WHERE guildId = '{}'"
-                .format(ctx.guild.id))
         
 def setup(bot):
     bot.add_cog(SetupCog(bot))
