@@ -36,11 +36,10 @@ class SetupCog(commands.Cog):
             # Adds the Command User's data into the database
             cur.execute('INSERT INTO players(playerId, gameId) VALUES(?, ?)'
             ,(ctx.author.id, game_id,))
-            cur.execute('INSERT INTO games(masterId, gameId, guildId, "state", channelId, turnNo) VALUES(?, ?, ?, "pre-game", ?, 0)'
+            cur.execute('INSERT INTO games(masterId, gameId, guildId, "state", channelId, turnNo, round, phase) VALUES(?, ?, ?, "pre-game", ?, 0, 0, 0)'
             ,(ctx.author.id, game_id, ctx.guild.id, g_channel.id,))
 
-            await ctx.reply('A L\'s Game has been created with Game ID : **?**'
-            ,(game_id,))
+            await ctx.reply('A L\'s Game has been created with Game ID : **{}**'.format(game_id))
 
             con.commit()
     
@@ -55,8 +54,8 @@ class SetupCog(commands.Cog):
             cur.execute('INSERT INTO players (playerId, gameId) VALUES (?, ?)'
             ,(ctx.author.id, g_id,))
 
-            await ctx.reply('Sucessfully joined L\'s Game with Game ID : **?**'
-            ,(g_id,))
+            await ctx.reply('Sucessfully joined L\'s Game with Game ID : **{}**'
+            .format(g_id))
 
             con.commit()
         
@@ -71,8 +70,7 @@ class SetupCog(commands.Cog):
             cur.execute("DELETE FROM players WHERE playerId = ? AND gameId = ?"
             ,(ctx.author.id, g_id,))
 
-            await ctx.reply('Sucessfully left L\'s Game with Game ID : **?**'
-            ,(g_id,))
+            await ctx.reply('Sucessfully left L\'s Game with Game ID : **{}**'.format(g_id,))
 
             # W.I.P to check if game has no players and Delete the Game
             """
@@ -82,9 +80,9 @@ class SetupCog(commands.Cog):
                 ,(g_id))
                 await ctx.send("No Players found in game : ?\nDeleting the game",(g_id,))
 
-
-            con.commit()
+            
             """
+            con.commit()
         
 def setup(bot):
     bot.add_cog(SetupCog(bot))
