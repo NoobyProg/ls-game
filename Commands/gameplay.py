@@ -49,8 +49,6 @@ class GameCog(commands.Cog):
                 Usage : %pass
                 """)
 
-# W.I.P (Incomplete)
-
     # Used to start a L's Game
     @commands.command()
     async def start(self, ctx):
